@@ -1,6 +1,8 @@
 #ifndef UKF_H
 #define UKF_H
 
+#define UKF_DEBUG 0
+
 #include "measurement_package.h"
 #include "Eigen/Dense"
 #include <vector>
