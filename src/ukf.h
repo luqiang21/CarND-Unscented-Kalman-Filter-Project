@@ -1,7 +1,7 @@
 #ifndef UKF_H
 #define UKF_H
 
-#define UKF_DEBUG 0
+#define UKF_DEBUG 1
 
 #include "measurement_package.h"
 #include "Eigen/Dense"
@@ -111,10 +111,10 @@ public:
    */
   void UpdateRadar(MeasurementPackage meas_package);
   
-  void GenerateSigmaPoints(MatrixXd* Xsig_out);
   void AugmentedSigmaPoints(MatrixXd* Xsig_out);
-  void SigmaPointPrediction(MatrixXd* Xsig_out);
+  void SigmaPointPrediction(MatrixXd* Xsig_out, float delta_t);
   void PredictMeanAndCovariance(VectorXd* x_pred, MatrixXd* P_pred);
+  
   void PredictRadarMeasurement(VectorXd* z_out, MatrixXd* S_out);
   void PredictLidarMeasurement(VectorXd* z_out, MatrixXd* S_out);
 
