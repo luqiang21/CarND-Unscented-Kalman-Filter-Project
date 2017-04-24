@@ -208,10 +208,12 @@ void UKF::AugmentedSigmaPoints() {
   
   //create augmented sigma points
   Xsig_aug_.col(0)  = x_aug;
+  
+  const float root = sqrt(lambda_ + n_aug_);
   for (int i = 0; i< n_aug_; i++)
   {
-    Xsig_aug_.col(i+1)       = x_aug + sqrt(lambda_+n_aug_) * L.col(i);
-    Xsig_aug_.col(i+1+n_aug_) = x_aug - sqrt(lambda_+n_aug_) * L.col(i);
+    Xsig_aug_.col(i+1)       = x_aug + root * L.col(i);
+    Xsig_aug_.col(i+1+n_aug_) = x_aug - root * L.col(i);
   }
   
   
@@ -241,7 +243,7 @@ void UKF::SigmaPointPrediction(float delta_t) {
     float psi_dot = x_k(4);
     float noise_a = x_k(5);
     float noise_yawdd = x_k(6);
-    float delta_t_2 = delta_t * delta_t;
+    const float delta_t_2 = delta_t * delta_t;
     
     if(fabs(psi_dot) < 0.0001){
       px = px + v * cos(psi) * delta_t + 1/2. * delta_t_2 * cos(psi) * noise_a;
