@@ -25,7 +25,7 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 1;
+  std_a_ = 0.6;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
   std_yawdd_ = 0.6;
@@ -150,7 +150,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     
     if(x_[0] < 0.000001 && x_[1] < 0.000001){
       cout<<"zero input"<<endl;
-      x_ << 0.001, 0.001, 0., 0., 0.;
+//      x_ << 0.001, 0.001, 0., 0., 0.;
       return;
     }
     
