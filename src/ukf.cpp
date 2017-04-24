@@ -25,10 +25,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 0.5;
+  std_a_ = 1;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 0.5;
+  std_yawdd_ = 0.6;
 
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
@@ -111,11 +111,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   if (!is_initialized_) {
     // first measurement
     cout << "UKF: 1st" << endl;
-    P_ << 1, 0, 0, 0,0,
-    0, 1, 0, 0, 0,
-    0, 0, 1, 0, 0,
-    0, 0, 0, 1, 0,
-    0, 0, 0, 0, 1;
+    P_ << 1., 0., 0., 0.,0.,
+          0., 1., 0., 0., 0.,
+          0., 0., 1., 0., 0.,
+          0., 0., 0., 1., 0.,
+          0., 0., 0., 0., 1.;
     
     double weight_0 = lambda_/(lambda_+n_aug_);
     weights_(0) = weight_0;
