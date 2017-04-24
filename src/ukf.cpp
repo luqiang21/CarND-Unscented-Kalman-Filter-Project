@@ -13,7 +13,7 @@ using std::vector;
  */
 UKF::UKF() {
   // if this is false, laser measurements will be ignored (except during init)
-  use_laser_ = false;
+  use_laser_ = true;
 
   // if this is false, radar measurements will be ignored (except during init)
   use_radar_ = true;
@@ -136,13 +136,13 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       /**
        Initialize state.
        */
-      x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0;
+      x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0., 0., 0.;
       
     }
     
     if(x_[0] < 0.000001 && x_[1] < 0.000001){
       cout<<"zero input"<<endl;
-      x_ << 0.001, 0.001, 0., 0.;
+      x_ << 0.001, 0.001, 0., 0., 0.;
     }
     // done initializing, no need to predict or update
     is_initialized_ = true;
@@ -156,10 +156,10 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   
   Prediction(delta_t);
   
-  if (use_laser_ && meas_package.sensor_type_ == MeasurementPackage::RADAR) {
+  if (use_radar_ && meas_package.sensor_type_ == MeasurementPackage::RADAR) {
     UpdateRadar(meas_package);
   }
-  else if(use_radar_ && meas_package.sensor_type_ == MeasurementPackage::LASER){
+  else if(use_laser_ && meas_package.sensor_type_ == MeasurementPackage::LASER){
     UpdateLidar(meas_package);
 
   }else{
@@ -509,7 +509,7 @@ void UKF::UpdateLidarState (MeasurementPackage meas_package) {
   std::cout << "Updated state covariance P: " << std::endl << P_ << std::endl;
   
   //calculate NIS
-  NIS_lidar_ = z_diff.transpose() * S_lidar_.inverse() * z_diff;
+  NIS_laser_ = z_diff.transpose() * S_lidar_.inverse() * z_diff;
   
   //  //write result
   //  *x_out = x_;
@@ -549,8 +549,8 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   You'll also need to calculate the lidar NIS.
   */
   
-  PredictLidarMseasurement(z_pred_lidar_, S_lidar_);
-  UpdateLidarState(VectorXd* x_out, MatrixXd* P_out);
+  PredictLidarMeasurement();
+  UpdateLidarState(meas_package);
 
   
   //calculate the NIS
