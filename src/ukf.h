@@ -1,7 +1,7 @@
 #ifndef UKF_H
 #define UKF_H
 
-#define UKF_DEBUG 1
+#define UKF_DEBUG 0
 
 #include "measurement_package.h"
 #include "Eigen/Dense"
@@ -34,8 +34,8 @@ public:
   ///* predicted sigma points matrix
   MatrixXd Xsig_pred_;
 
-  ///* time when the state is true, in us
-  long long time_us_;
+    // previous timestamp
+  long previous_timestamp_;
 
   ///* Process noise standard deviation longitudinal acceleration in m/s^2
   double std_a_;
