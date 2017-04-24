@@ -76,6 +76,24 @@ public:
   ///* the current NIS for laser
   double NIS_laser_;
 
+  
+  MatrixXd Xsig_aug_;
+  
+  int n_z_radar_;
+  int n_z_lidar_;
+  
+  MatrixXd S_radar_;
+  MatrixXd S_lidar_;
+  
+  //create matrix for sigma points in measurement space
+  MatrixXd Zsig_radar_;
+  VectorXd z_pred_radar_;
+ 
+  
+  MatrixXd Zsig_lidar_;
+  VectorXd z_pred_lidar_;
+
+  
   /**
    * Constructor
    */
@@ -110,15 +128,19 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
-  
-  void AugmentedSigmaPoints(MatrixXd* Xsig_out);
-  void SigmaPointPrediction(MatrixXd* Xsig_out, float delta_t);
-  void PredictMeanAndCovariance(VectorXd* x_pred, MatrixXd* P_pred);
-  
-  void PredictRadarMeasurement(VectorXd* z_out, MatrixXd* S_out);
-  void PredictLidarMeasurement(VectorXd* z_out, MatrixXd* S_out);
 
-  void UpdateState(VectorXd* x_out, MatrixXd* P_out);
+  
+  void AugmentedSigmaPoints();
+  void SigmaPointPrediction(float delta_t);
+  void PredictMeanAndCovariance();
+  
+  void PredictRadarMeasurement();
+  void PredictLidarMeasurement();
+  
+
+//  void UpdateRadarState(VectorXd* x_out, MatrixXd* P_out, MeasurementPackage meas_package);
+  void UpdateRadarState(MeasurementPackage meas_package);
+  void UpdateLidarState(MeasurementPackage meas_package);
 };
 
 #endif /* UKF_H */
