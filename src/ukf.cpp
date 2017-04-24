@@ -148,10 +148,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 #endif
     }
     
-//    if(x_[0] < 0.000001 && x_[1] < 0.000001){
-//      cout<<"zero input"<<endl;
-//      x_ << 0.001, 0.001, 0., 0., 0.;
-//    }
+    if(x_[0] < 0.000001 && x_[1] < 0.000001){
+      cout<<"zero input"<<endl;
+      x_ << 0.001, 0.001, 0., 0., 0.;
+      return;
+    }
     
     
     // done initializing, no need to predict or update
