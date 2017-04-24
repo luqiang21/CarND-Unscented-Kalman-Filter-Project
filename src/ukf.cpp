@@ -270,7 +270,12 @@ void UKF::SigmaPointPrediction(float delta_t) {
 //  *Xsig_out = Xsig_pred_;
   
 }
- 
+float UKF::angleNormalization(float angle){
+  //angle normalization
+  while (angle> M_PI) angle-=2.*M_PI;
+  while (angle<-M_PI) angle+=2.*M_PI;
+  return angle;
+}
 
 void UKF::PredictMeanAndCovariance() {
 //  //create vector for predicted state
@@ -300,8 +305,9 @@ void UKF::PredictMeanAndCovariance() {
     VectorXd x_k = Xsig_pred_.col(i);
     x_k -= x_;
     
-    while (x_k(3)> M_PI) x_k(3)-=2.*M_PI;
-    while (x_k(3)<-M_PI) x_k(3)+=2.*M_PI;
+    x_k(3) = angleNormalization(x_k(3));
+//    while (x_k(3)> M_PI) x_k(3)-=2.*M_PI;
+//    while (x_k(3)<-M_PI) x_k(3)+=2.*M_PI;
     
     P_ += weights_[i] * x_k * x_k.transpose();
     
@@ -400,11 +406,15 @@ void UKF::UpdateRadarState (MeasurementPackage meas_package) {
     VectorXd x_diff = Xsig_pred_.col(i) - x_;
     
     //angle normalization
-    while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-    while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+//    while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+//    while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+    z_diff(1) = angleNormalization(z_diff(1));
+
     //angle normalization
-    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
-    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+//    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
+//    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+    x_diff(3) = angleNormalization(x_diff(3));
+
     
     double weight = weights_(i);
     Tc += weight * x_diff * z_diff.transpose();
@@ -415,8 +425,10 @@ void UKF::UpdateRadarState (MeasurementPackage meas_package) {
   VectorXd z_diff = z - z_pred_radar_;
   
   //angle normalization
-  while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-  while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+//  while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+//  while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+  z_diff(1) = angleNormalization(z_diff(1));
+
   
   x_ = x_ + K * z_diff;
   P_ = P_ - K * S_radar_ * K.transpose();
@@ -503,11 +515,15 @@ void UKF::UpdateLidarState (MeasurementPackage meas_package) {
     VectorXd x_diff = Xsig_pred_.col(i) - x_;
     
     //angle normalization
-    while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-    while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+//    while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+//    while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+    z_diff(1) = angleNormalization(z_diff(1));
+
     //angle normalization
-    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
-    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+//    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
+//    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+    x_diff(3) = angleNormalization(x_diff(3));
+
     
     double weight = weights_(i);
     Tc += weight * x_diff * z_diff.transpose();
@@ -519,8 +535,11 @@ void UKF::UpdateLidarState (MeasurementPackage meas_package) {
   VectorXd z_diff = z - z_pred_lidar_;
   
   //angle normalization
-  while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-  while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+//  while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+//  while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+  z_diff(1) = angleNormalization(z_diff(1));
+
+  
   x_ = x_ + K * z_diff;
   P_ = P_ - K * S_lidar_ * K.transpose();
 

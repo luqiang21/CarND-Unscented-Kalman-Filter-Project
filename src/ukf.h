@@ -141,6 +141,8 @@ public:
 //  void UpdateRadarState(VectorXd* x_out, MatrixXd* P_out, MeasurementPackage meas_package);
   void UpdateRadarState(MeasurementPackage meas_package);
   void UpdateLidarState(MeasurementPackage meas_package);
+  
+  float angleNormalization(float angle);
 };
 
 #endif /* UKF_H */
